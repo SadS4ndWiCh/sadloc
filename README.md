@@ -7,13 +7,14 @@ Creating a custom memory allocator with C using the `sbrk` syscall.
 ```c
 void *sadloc(size_t size);
 void sadfree(void *block);
+void *sadcloc(size_t nmemb, size_t size);
 ```
 
 ## 🪅 TODO
 
 - [x] sadloc (malloc)
 - [x] sadfree (free)
-- [ ] sadcloc (calloc)
+- [x] sadcloc (calloc)
 - [ ] sadreloc (realloc)
 
 ## 🎠 Tests

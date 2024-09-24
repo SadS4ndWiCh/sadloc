@@ -107,3 +107,22 @@ void sadfree(void *block) {
     header->s.is_free = 1;
     pthread_mutex_unlock(&sadloc_mutex);
 }
+
+void *sadcloc(size_t nmemb, size_t size) {
+    void *block;
+
+    if (nmemb == 0 || size == 0) return NULL;
+
+    size_t total_size = nmemb * size;
+    if (size != total_size / nmemb) return NULL;
+
+    block = sadloc(total_size);
+    if (!block) return NULL;
+
+    for (size_t i = 0; i < total_size; i++) {
+        unsigned char *c = ((unsigned char *) block) + i;
+        *c = 0;
+    }
+
+    return block;
+}
