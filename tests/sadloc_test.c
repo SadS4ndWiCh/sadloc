@@ -11,7 +11,7 @@
 
 int main(void) {
     int *age = (int *) sadloc(sizeof(int));
-    ASSERT(age == NULL, "Should be able to alloc a block of memory.");
+    ASSERT(age != NULL, "Should be able to alloc a block of memory.");
 
     *age = 12;
 
