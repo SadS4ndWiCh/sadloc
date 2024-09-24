@@ -21,6 +21,9 @@ typedef union header header_t;
 // Alloc a block of memory of given `size`
 void *sadloc(size_t size);
 
+// Free a block of memory
+void sadfree(void *block);
+
 // Return the first free block of memory of the given size (first-fit)
 header_t *get_free_block(size_t size);
 

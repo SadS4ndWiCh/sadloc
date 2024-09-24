@@ -8,7 +8,7 @@
     The `sbrk(size)` can allocate a block memory by increasing the `program break` 
     or deallocate by decrement the `program break`.
 
-    With `size == 0`, it gives the current address of the program.
+    With `size == 0`, it gives the current address of the program break.
     With `size > 0`, it increments the program break by `x bytes`.
     With `size < 0`, it decrements the program break by `x bytes`.
 
@@ -69,4 +69,41 @@ header_t *get_free_block(size_t size) {
     }
 
     return NULL;
+}
+
+void sadfree(void *block) {
+    header_t *header, *tmp;
+    void *programbreak;
+
+    if (!block) return;
+
+    pthread_mutex_lock(&sadloc_mutex);
+    header = (header_t *) block - 1;
+
+    // Check if memory to free is the end of program break
+    programbreak = sbrk(0);
+    if ((char *)block + header->s.size == programbreak) {
+        if (head == tail) {
+            head = tail = NULL;
+        } else {
+            tmp = head;
+            while (tmp) {
+                if (tmp->s.next == tail) {
+                    tmp->s.next = NULL;
+                    tail = tmp;
+                }
+
+                tmp = tmp->s.next;
+            }
+        }
+
+        // Decrease the program break by the memory block size to
+        // successfuly deallocate
+        sbrk(0 - sizeof(header_t) + header->s.size);
+        pthread_mutex_lock(&sadloc_mutex);
+        return;
+    }
+
+    header->s.is_free = 1;
+    pthread_mutex_unlock(&sadloc_mutex);
 }
