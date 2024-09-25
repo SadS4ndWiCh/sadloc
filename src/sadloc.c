@@ -100,7 +100,7 @@ void sadfree(void *block) {
         // Decrease the program break by the memory block size to
         // successfuly deallocate
         sbrk(0 - sizeof(header_t) + header->s.size);
-        pthread_mutex_lock(&sadloc_mutex);
+        pthread_mutex_unlock(&sadloc_mutex);
         return;
     }
 
