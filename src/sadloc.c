@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 #include <pthread.h>
 
 #include "sadloc.h"
@@ -123,6 +124,27 @@ void *sadcloc(size_t nmemb, size_t size) {
         unsigned char *c = ((unsigned char *) block) + i;
         *c = 0;
     }
+
+    return block;
+}
+
+void *sadreloc(void *ptr, size_t size) {
+    header_t *header;
+    void *block;
+
+    if (ptr == NULL) return sadloc(size);
+    if (size == 0) {
+        sadfree(ptr);
+        return NULL;
+    }
+
+    block = sadloc(size);
+    if (!block) return NULL;
+
+    header = (header_t *) ptr - 1;
+
+    if (size > header->s.size) memcpy(block, ptr, header->s.size);
+    else memcpy(block, ptr, size);
 
     return block;
 }

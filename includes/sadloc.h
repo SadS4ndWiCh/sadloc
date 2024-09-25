@@ -28,6 +28,9 @@ void sadfree(void *block);
 // return a pointer to it
 void *sadcloc(size_t nmemb, size_t size);
 
+// Changes the size of the memory block pointed to by `ptr` to `size` bytes.
+void *sadreloc(void *ptr, size_t size);
+
 // Return the first free block of memory of the given size (first-fit)
 header_t *get_free_block(size_t size);
 
